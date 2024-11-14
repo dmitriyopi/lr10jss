@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="style19.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        const symbols = ['🍒', '🍋', '🍊', '🍇', '🍎', '🍐', '🍉'];
+        let totalWins = 0;
+        let spinCount = 0;
+        const maxSpins = 3;
+        let balance=10000;
+        let bet=100;
+
+        function animateSlot(slotId, duration, callback) {
+            const slotElement = document.getElementById(slotId);
+            let animationInterval = setInterval(() => {
+                slotElement.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            }, 150); 
+
+            
+            setTimeout(() => {
+                clearInterval(animationInterval);
+                const finalSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+                slotElement.innerText = finalSymbol;
+                callback(finalSymbol); 
+            }, duration);
+        }
+
+        function Spin() {
+            if (spinCount >= maxSpins) {
+                document.getElementById("result").innerText = "Гра закінчена! Ви використали 3 спіни.";
+                return;
+            }
+            if(balance<bet)
+            {
+                document.getElementById("result").innerText = "У вас недостатньо грошей";
+                return;
+            }
+            balance-=bet;
+            document.getElementById("balance").innerText = "Баланс: " + balance;
+            document.getElementById
+            document.getElementById("result").innerText = ""; 
+            spinCount++;
+            document.getElementById("spinCount").innerText = "Кількість спінів: " + spinCount + " / " + maxSpins;
+
+            let results = [];
+            animateSlot("slot1", 1000, (symbol) => {
+                results[0] = symbol;
+                checkResults(results);
+            });
+            animateSlot("slot2", 1400, (symbol) => {
+                results[1] = symbol;
+                checkResults(results);
+            });
+            animateSlot("slot3", 1800, (symbol) => {
+                results[2] = symbol;
+                checkResults(results);
+            });
+        }
+        function checkResults(results) {
+            if (results.length === 3) {
+                if (results[0] === results[1] && results[1] === results[2]) {
+                    document.getElementById("result").innerText = "Ви виграли 💰💰";
+                    totalWins++;
+                    document.getElementById("totalWins").innerText = "Виграшів: " + totalWins;
+                    balance+=1000;
+                } else {
+                    document.getElementById("result").innerHTML = "<strong> Ви програли";
+                }
+
+                if (spinCount === maxSpins) {
+                    document.getElementById("result").innerHTML += " <strong> Гра закінчена!";
+                }
+            }
+        }
+
+        function ResetGame() {
+            spinCount = 0;
+            document.getElementById("slot1").innerText = "❓";
+            document.getElementById("slot2").innerText = "❓";
+            document.getElementById("slot3").innerText = "❓";
+            document.getElementById("result").innerText = "";
+            document.getElementById("totalWins").innerText = "Виграшів: " + totalWins;
+            document.getElementById("spinCount").innerText = "Кількість спінів: " + spinCount + " / " + maxSpins;
+        }
+        function EditNames() 
+        {
+            let playerName1 = prompt("Введіть нове ім'я для першого гравця", "Гравець 1");
+            if (playerName1) document.getElementById("playerName1").innerText = playerName1;
+           
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("spinButton").addEventListener("click", Spin);
+            document.getElementById("resetButton").addEventListener("click", ResetGame);
+        });
+    </script>
+</head>
+<body>
+    <div class="main-container">
+        <h1>Однорукий бандит</h1>
+        <h1 id="playerName1">Гравець 1</h1>
+        <div class="machine">
+            <div class="slot" id="slot1">❓</div>
+            <div class="slot" id="slot2">❓</div>
+            <div class="slot" id="slot3">❓</div>
+        </div>
+        <div id="result"></div>
+        <h3 id="totalWins">Виграшів: 0</h3>
+        <h3 id="balance">Баланс: 0$</h3>
+        <h3 id="spinCount">Кількість спінів: 0 / 3</h3>
+        <button id="spinButton" class="button">Прокрутити</button>
+        <button id="resetButton" class="button">Почати заново</button>
+        <button class="button" onclick="EditNames()">Змінити імена</button>
+    </div>
+</body>
+</html>
